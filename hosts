@@ -1,0 +1,4 @@
+# Ansible inventory
+
+[test]
+awstest2  ansible_ssh_host=awstest2

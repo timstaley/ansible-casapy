@@ -9,9 +9,8 @@ the standard [CASA][] package, including the *casapy* command line environment.
 
 Dependencies
 ------------
-
-This role makes use of [timstaley.base][] to ensure some basic tools 
-(git,pip,virtualenv) are available.
+This role assumes pip is pre-installed.
+(The test-installation playbook makes use of [timstaley.base][].)
 
 [timstaley.base]: https://github.com/timstaley/ansible-base
 

@@ -1,0 +1,52 @@
+
+## ----------------------------------------------
+## Simple but slower version: Download from NRAO
+- name: Grab casapy tarball from NRAO
+  get_url:
+    url: "{{ casapy_nrao_url }}"
+    dest: "{{ casapy_download_folder }}"
+  register: casapy_tarball
+  when: casapy_s3_bucket is not defined
+
+- name: Unpack casapy tarball
+  unarchive:
+    copy: no
+    src: "{{ casapy_tarball.dest }}"
+    dest: "{{ casapy_install_prefix }}"
+    creates: "{{ casapy_install_prefix }}/{{ casapy_extract_name }}"
+  register: casapy_installation
+  when: casapy_s3_bucket is not defined
+
+
+## ---------------------------------------------------
+## Fiddly but faster: Grab from a pre-seeded S3 bucket
+- name: Install s3 module dependencies
+  pip: name=boto
+  sudo: yes
+  when: casapy_s3_bucket is defined
+
+- name: Stat casapy s3 tarball, don't bother to download if name matches
+  stat:
+    path:  "{{ casapy_download_folder }}/{{ casapy_s3_tarball_keyname  }}"
+  register: casapy_s3_tarball_stat
+
+# Simple GET operation
+- name: Get casapy tarball from S3 store
+  s3:
+    bucket: "{{ casapy_s3_bucket }}"
+    object: "{{ casapy_s3_tarball_keyname }}"
+    dest: "{{ casapy_download_folder }}/{{ casapy_s3_tarball_keyname  }}"
+    mode: get
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+  when: casapy_s3_bucket is defined and casapy_s3_tarball_stat.stat.exists == False
+
+- name: Unpack casapy tarball
+  unarchive:
+    copy: no
+    src: "{{ casapy_download_folder }}/{{ casapy_s3_tarball_keyname  }}"
+    dest: "{{ casapy_install_prefix }}"
+    creates: "{{ casapy_install_prefix }}/{{ casapy_extract_name }}"
+  register: casapy_installation
+  when: casapy_s3_bucket is defined
+

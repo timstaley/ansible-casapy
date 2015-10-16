@@ -1,0 +1,10 @@
+libsm6
+libxi6
+libxrender1
+libxrandr2
+libxfixes3
+libxcursor1
+libxinerama1
+libxslt1-dev
+libxft2
+xvfb

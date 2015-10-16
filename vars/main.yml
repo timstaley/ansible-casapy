@@ -1,4 +1,8 @@
 ---
 # vars file for casapy
+
+## Will download from the s3 url instead, if defined:
+#casapy_s3_bucket:
+
 casapy_install_path: "{{casapy_install_prefix}}/{{casapy_extract_name}}"
 

@@ -1,6 +1,16 @@
 - hosts: test
 
+  vars:
+    - casapy_s3_bucket: fourpisky-testbucket1
+
+  pre_tasks:
+    - include_vars: secrets/aws_keys.yml
+      no_log: True
+      when: casapy_s3_bucket is defined
+
+
   roles:
+    - timstaley.base
     - { role: ../../casapy}
 
   tasks:

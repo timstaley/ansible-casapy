@@ -1,3 +1,25 @@
 ---
-# tasks file for casapy
-- debug: msg="Casapy role"
+# tasks file for casapy role
+
+- name: Create download / install dirs with correct permissions
+  file: path={{item}} state=directory mode=0755 owner={{ansible_user_id}}
+  with_items:
+    - "{{ casapy_download_folder }}"
+    - "{{ casapy_install_prefix }}"
+  sudo: yes
+
+- include: enable_apt_multiverse.yml
+
+- name: Install casa pre-requisites
+  apt: name={{item}} update_cache=yes cache_valid_time=1800
+  sudo: yes
+  with_items:
+    - "{{ lookup('file', 'casapy-ubuntu-apt-pkgs.txt').split() }}"
+
+- name: Stat casapy install dir
+  stat:
+    path: "{{ casapy_install_prefix }}/{{ casapy_extract_name }}"
+  register: casapy_install_stat
+
+- include: get_casapy.yml
+  when: casapy_install_stat.stat.exists == False
