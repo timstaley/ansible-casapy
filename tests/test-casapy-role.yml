@@ -1,0 +1,7 @@
+- hosts: test
+
+  roles:
+    - { role: ../../casapy}
+
+  tasks:
+  - debug: msg="Pass"

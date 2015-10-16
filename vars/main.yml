@@ -1,0 +1,4 @@
+---
+# vars file for casapy
+casapy_install_path: "{{casapy_install_prefix}}/{{casapy_extract_name}}"
+

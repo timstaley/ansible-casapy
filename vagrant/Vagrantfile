@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.define "casapyvm" do |casapyvm| end
+
+  config.vm.provider "virtualbox" do |v|
+      v.memory = 512
+      v.cpus = 2
+  end
+
+  config.trigger.before :provision do
+      # Install the role dependencies:
+      run "ansible-galaxy install -p .vagrant/ansible_roles timstaley.base"
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "../tests/test-casapy-role.yml"
+    ansible.verbose = "vv"
+      ansible.groups = {"test" => ["casapyvm"]}
+  end
+ 
+  if Vagrant.has_plugin?("vagrant-cachier")
+    # Configure cached packages to be shared between instances of the same base box.
+    # More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
+    config.cache.scope = :box
+  end
+end

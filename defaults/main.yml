@@ -1,0 +1,6 @@
+---
+# defaults file for casapy
+
+casapy_download_url: https://svn.cv.nrao.edu/casa/linux_distro/release/el6/casa-release-4.4.0-el6.tar.gz
+casapy_extract_name: casa-release-4.4.0-el6
+casapy_install_prefix: /opt

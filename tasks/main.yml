@@ -1,0 +1,3 @@
+---
+# tasks file for casapy
+- debug: msg="Casapy role"
